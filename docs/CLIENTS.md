@@ -61,10 +61,9 @@ macOS and Linux need none of this.
 
 ## VS Code
 
-One click from [the README](../README.md#set-it-up). The button carries no key, because a link that
-did would leave your key in your browser history. That is fine - the server still starts, and
-`inforcer_status` will tell you what is missing. Add `INFORCER_API_KEY` and `INFORCER_REGION` to the
-entry it created.
+One click from [the README](../README.md#set-it-up). VS Code asks for your API key, then your
+region. The key goes into VS Code's own secret storage - not into a settings file, and not into the
+link, so it never reaches your browser history either.
 
 To do it by hand instead: VS Code uses `servers`, not `mcpServers`. That is the mistake most likely to cost you an afternoon.
 
