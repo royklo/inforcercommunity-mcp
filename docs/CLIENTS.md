@@ -77,7 +77,9 @@ To check it worked, ask Claude: *"what Inforcer tools do you have?"*
 ## VS Code
 
 One click from [the README](../README.md#set-it-up). When the server first starts, VS Code asks
-for your API key, then your region. The key goes into VS Code's own secret storage - not into a
+for your API key, then your region, then whether to allow write actions. Pick **Read-only** unless
+you know you need the other - it is the safe default, and you can change it later.
+[What write actions are](SECURITY.md#it-cannot-change-anything). The key goes into VS Code's own secret storage - not into a
 settings file, and not into the link, so it never reaches your browser history either.
 
 ### Changing your key later
