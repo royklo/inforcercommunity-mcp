@@ -61,9 +61,24 @@ macOS and Linux need none of this.
 
 ## VS Code
 
-One click from [the README](../README.md#set-it-up). VS Code asks for your API key, then your
-region. The key goes into VS Code's own secret storage - not into a settings file, and not into the
-link, so it never reaches your browser history either.
+One click from [the README](../README.md#set-it-up). When the server first starts, VS Code asks
+for your API key, then your region. The key goes into VS Code's own secret storage - not into a
+settings file, and not into the link, so it never reaches your browser history either.
+
+### Changing your key later
+
+VS Code asks once, then remembers. It will not ask again, even if you install from the button a
+second time. An old key keeps being used, quietly.
+
+To replace it, run **MCP: Open User Configuration (CTRL+SHIFT+P)** from the Command Palette. Next to your key you
+will see a faded `= **********`. Hover it. A small **Edit | Clear | Clear All** bar appears.
+**Edit** replaces the key now. **Clear** makes VS Code ask you again next time the server starts.
+
+![The VS Code settings file, with the Edit, Clear and Clear All bar showing above the API key
+line](images/vscode-edit-key.png)
+
+To confirm the new key took, ask your assistant to run `inforcer_status`. It shows a short
+fingerprint of the key. A different key gives a different fingerprint.
 
 To do it by hand instead: VS Code uses `servers`, not `mcpServers`. That is the mistake most likely to cost you an afternoon.
 

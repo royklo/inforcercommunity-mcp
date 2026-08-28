@@ -9,6 +9,10 @@ English, and get real answers back.
 
 Your assistant normally can't see your Inforcer data. This connects the two.
 
+Here it is working:
+
+![The assistant answering questions about Inforcer tenants](docs/images/demo.gif)
+
 > **Community project. Not owned, endorsed, or maintained by Inforcer.**
 > Built by [Roy Klooster](https://github.com/royklo). Bugs here are mine, not theirs.
 
@@ -22,8 +26,8 @@ Nothing to download. Your assistant fetches this automatically.
 
 ## Set it up
 
-**VS Code** - one click. It asks for your key and region, and stores the key in VS Code's own
-secret storage rather than a settings file:
+**VS Code** - one click. It asks for your key and region when the server first starts. The key
+goes into VS Code's own secret storage, not a settings file:
 
 | Platform | VS Code | VS Code Insiders |
 |---|---|---|

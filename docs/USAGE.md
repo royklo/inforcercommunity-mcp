@@ -116,7 +116,7 @@ tenant data.
 
 | What you see | What it usually means |
 |---|---|
-| `Access denied due to invalid subscription key` | The **region** is wrong, more often than the key. [Check yours](CONFIGURATION.md#inforcer_region). |
+| `Access denied due to invalid subscription key` | The **region** is wrong, or the **key** is. [Check the region](CONFIGURATION.md#inforcer_region). On VS Code, [check which key it kept](CLIENTS.md#changing-your-key-later). |
 | Your assistant doesn't know what `inforcer_status` is | Settings in the wrong file, or it hasn't restarted. [Find the file](CLIENTS.md#where-each-assistant-keeps-its-settings). |
 | On Windows: nothing loads, or a log mentions `spawn npx ENOENT` | `npx` needs `cmd /c` in front of it. [The Windows block](CLIENTS.md#on-windows). |
 | `"state": "valid-no-scope"` | Not a problem. Your key works, it just can't read one particular thing. |
@@ -124,6 +124,7 @@ tenant data.
 | Some tools are there, others are missing | Your assistant limits how many tools it shows. There is no good fix from this side today; ask it to list the tools it can see so you know what you have. |
 | It keeps asking which account | You have more than one configured. Name the client in your question. |
 | The first question takes about 25 seconds | Normal. Inforcer is slow the first time. For the next five minutes it's instant. |
+| Something felt slow and you want to know why | On a slow answer the tool reports two timings: how long it waited for Inforcer, and how long it spent sorting the results itself. Ask your assistant which was bigger. |
 | An answer looks cut off | Expected on a big tenant. Narrow the question, or [use PowerShell](#documenting-a-whole-tenant). |
 | It refuses to change something | It's read-only on purpose. [Why](SECURITY.md#it-cannot-change-anything). |
 
