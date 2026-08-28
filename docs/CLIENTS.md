@@ -11,7 +11,7 @@ it. [Why it works this way →](SECURITY.md#why-it-runs-on-your-machine)
 | Assistant | Settings file |
 |---|---|
 | Claude Code | `~/.claude.json` - or use `claude mcp add` |
-| Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` - [first time?](#claude-desktop) |
 | Claude Desktop (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
 | Cursor | `~/.cursor/mcp.json` |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
@@ -58,6 +58,21 @@ claude mcp add inforcer -s user -e INFORCER_API_KEY=your-api-key -e INFORCER_REG
 ```
 
 macOS and Linux need none of this.
+
+## Claude Desktop
+
+If you have never added a tool before, this file does not exist yet. Claude Desktop creates it for
+you:
+
+1. Click the **Claude** menu at the very top of your screen, in your computer's menu bar. Not the
+   settings inside the Claude window - those are a different thing.
+2. Choose **Settings**, then **Developer** in the left sidebar.
+3. Click **Edit Config**. This creates the file if it is missing, and opens it.
+4. Paste in the block from [the README](../README.md#set-it-up), then save. If the file already had
+   servers in it, add this one alongside them rather than replacing anything.
+5. Quit Claude Desktop completely and open it again. Saving the file on its own is not enough.
+
+To check it worked, ask Claude: *"what Inforcer tools do you have?"*
 
 ## VS Code
 
