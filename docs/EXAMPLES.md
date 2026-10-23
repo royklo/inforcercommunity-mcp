@@ -33,7 +33,7 @@ Found by looking **inside** the policies, not at their names. That matters - see
 ### *"Run the Copilot Readiness assessment on Contoso."*
 
 ```
-21 checks: 16 passed, 4 failed, 1 not applicable
+21 checks: 16 passed, 5 failed
 
 Failed:
   External sharing is disabled on all SharePoint sites
@@ -92,7 +92,8 @@ looked at, so **ask for the ratio, never just the tick.**
 Don't read those two numbers as a count of things either: one line of a result can stand for several
 sites or policies, so *"0 out of 1"* may mean a handful failed. When it matters, ask for the names.
 
-And "not applicable" is not a failure - ask for all three numbers, passed, failed and not applicable.
+Some checks cannot run - a missing permission, or data Inforcer could not read. Those come back as
+"not assessed", which is not a failure. Ask for all three numbers: passed, failed and not assessed.
 
 ### *"Can it change anything in a client's tenant?"*
 
