@@ -11,8 +11,8 @@ Then ask it: **"run inforcer_status"**. If the answer contains `"state": "ok"`, 
 
 ## The settings block
 
-Most assistants take this. Replace `your-api-key` with your key and `uk` with your region. Keep the
-quote marks.
+Most assistants take this. Replace `your-client-id` and `your-client-secret` with your API client's,
+and `uk` with your region. Keep the quote marks.
 
 ```json
 {
@@ -21,13 +21,17 @@ quote marks.
       "command": "npx",
       "args": ["-y", "inforcercommunity-mcp@latest"],
       "env": {
-        "INFORCER_API_KEY": "your-api-key",
+        "INFORCER_CLIENT_ID": "your-client-id",
+        "INFORCER_CLIENT_SECRET": "your-client-secret",
         "INFORCER_REGION": "uk"
       }
     }
   }
 }
 ```
+
+**Using an API key instead?** Swap the two client lines for one: `"INFORCER_API_KEY": "your-api-key"`.
+Have both? Use the API client - see [An API client and a key together](#an-api-client-and-a-key-together).
 
 > **If the brackets are fighting you, don't fight back.** Paste whatever is already in the settings
 > file into a chat with your assistant, paste this block underneath, and ask it to combine the two.
@@ -51,32 +55,35 @@ The Claude app installed on your computer. It makes the settings file for you:
 
 ## Claude Code
 
-One command in a terminal, with your own key and region:
+One command in a terminal, with your own client ID, secret and region:
 
 ```bash
 claude mcp add inforcer -s user \
-  -e INFORCER_API_KEY=your-api-key \
+  -e INFORCER_CLIENT_ID=your-client-id \
+  -e INFORCER_CLIENT_SECRET=your-client-secret \
   -e INFORCER_REGION=uk \
   -- npx -y inforcercommunity-mcp@latest
 ```
 
+With an API key, use `-e INFORCER_API_KEY=your-api-key` in place of the two client lines.
 `-s user` makes it available in all your projects. On Windows, put `cmd /c` before `npx`.
 
 To remove it later: `claude mcp remove inforcer`.
 
 ## VS Code
 
-[One click from the README](../README.md#quickest-way-in). It asks for your key, then your region,
-and keeps the key in VS Code's own password store rather than in a file. The tools appear in
+[One click from the README](../README.md#quickest-way-in) - one button for an API client, one for a
+key. It asks for your client ID and secret (or your key), then your region, and keeps the secret in
+VS Code's own password store rather than in a file. The tools appear in
 **Agent** mode only, not in ordinary Copilot Chat.
 
-**VS Code asks once and never again**, even if you click the button a second time - so a wrong key or
+**VS Code asks once and never again**, even if you click the button a second time - so a wrong key, secret or
 region keeps being used, quietly. To replace it:
 
 1. Press **Cmd+Shift+P** (Mac) or **Ctrl+Shift+P** (Windows).
 2. Type `MCP: Open User Configuration`, press Enter.
-3. Hover your mouse over the faded `= **********` next to your key. An **Edit | Clear | Clear All**
-   bar appears.
+3. Hover your mouse over the faded `= **********` next to your secret or key. An
+   **Edit | Clear | Clear All** bar appears.
 
 ![The VS Code settings file, with the Edit, Clear and Clear All bar showing above the API key
 line](images/vscode-edit-key.png)
@@ -115,12 +122,15 @@ command = "npx"
 args = ["-y", "inforcercommunity-mcp@latest"]
 
 [mcp_servers.inforcer.env]
-INFORCER_API_KEY = "your-api-key"
+INFORCER_CLIENT_ID = "your-client-id"
+INFORCER_CLIENT_SECRET = "your-client-secret"
 INFORCER_REGION = "uk"
 ```
 
-Or let Codex write it: `codex mcp add inforcer --env INFORCER_API_KEY=your-api-key --env
-INFORCER_REGION=uk -- npx -y inforcercommunity-mcp@latest`. Run `/mcp` to confirm it loaded.
+With an API key, `INFORCER_API_KEY = "your-api-key"` replaces the two client lines. Or let Codex
+write it: `codex mcp add inforcer --env INFORCER_CLIENT_ID=your-client-id --env
+INFORCER_CLIENT_SECRET=your-client-secret --env INFORCER_REGION=uk -- npx -y
+inforcercommunity-mcp@latest`. Run `/mcp` to confirm it loaded.
 
 ## If it isn't working
 
@@ -134,8 +144,11 @@ right file; on Windows, did you make the `cmd /c` change.
 | What you see | What it means |
 |---|---|
 | `Access denied due to invalid subscription key` | The **region** is wrong, or the key is. Check the region first - it fails in exactly this way. |
+| `Token request failed (HTTP 400)` or `(HTTP 401)` | The client ID or secret is wrong, or the API client has expired or been switched off. Check the region too. |
 | `"state": "valid-no-scope"` | Fine. Your key works, it just isn't allowed to read one particular thing. |
-| A message about missing permissions | Your key is missing one, and the message names it. Ask Inforcer to add it. |
+| A message about missing permissions | Your key or API client is missing one, and the message names it. An API client's permissions are on its **Permissions** tab in the Inforcer portal. |
+| `pass the Microsoft tenant ID (GUID) or name` | An API client knows clients by their Microsoft tenant ID, not by Inforcer's ID number. Name the client instead. |
+| `"apiKey": "ignored ..."` in the status | You gave an API client and a key for the same account. The API client is used and the key is not. Remove the key line to tidy up. |
 | The first question takes ~25 seconds | Normal. Inforcer is slow the first time it is asked about a client. For the next five minutes, questions about that client are fast. Each client pays its own first-time cost. |
 | An answer looks cut off | Expected on a big client. Narrow the question. |
 | It keeps asking which account | You have two Inforcer accounts set up. Name the client in your question. |
@@ -143,7 +156,7 @@ right file; on Windows, did you make the `cmd /c` change.
 | Worked yesterday, not today | Restart the assistant. With `@latest` it collects the newest copy on each start, which is also how a fix reaches you. |
 
 Still stuck? [Open an issue](https://github.com/royklo/inforcerCommunity-mcp/issues) with what you
-tried and what it said. **Issues are public** - never paste your key, and ask your assistant to strip
+tried and what it said. **Issues are public** - never paste your key or client secret, and ask your assistant to strip
 client names first.
 
 ## Removing it
@@ -158,46 +171,59 @@ Extra lines inside `"env"`. You will probably never need any of them.
 
 | Setting | Default | What it does |
 |---|---|---|
-| `INFORCER_TENANTS` | all | Client ID numbers, comma-separated. The everyday tools then look up only those clients. A narrowing rather than a firm boundary - for that, ask Inforcer for a key covering only the clients you need. Ask *"list my tenants with their ID numbers"* to find them. |
+| `INFORCER_TENANTS` | all | Which clients to look up, comma-separated: Inforcer's ID numbers with a key, Microsoft tenant IDs with an API client. The everyday tools then look up only those clients. A narrowing rather than a firm boundary - for that, limit the API client to those clients in the Inforcer portal (its **Filters** tab), or ask Inforcer for a key covering only them. Ask *"list my tenants with their IDs"* to find them. |
 | `INFORCER_ACCOUNTS` | — | Two or more Inforcer accounts at once. [See below](#two-inforcer-accounts). |
-| `INFORCER_RESPONSE_BUDGET_BYTES` | `65536` | How big one answer may get, in bytes - roughly 65,000 characters, about twenty pages. Raise it if answers keep getting cut short. Maximum 4 MB. Assessment results use a larger limit of their own and ignore this. |
-| `INFORCER_PAGE_SIZE` | `50` | Items per batch on the parts of Inforcer that work in pages - the activity log search, and user and group listings. Between 1 and 500. |
-| `INFORCER_TOOLS` | `all` | `featured` shows a shorter tool list. In this release it hides one tool of seventeen, so it will not rescue an assistant that caps the list. |
+| `INFORCER_RESPONSE_BUDGET_BYTES` | `65536` | How big one answer may get, in bytes - roughly 65,000 characters, about twenty pages. Raise it if answers keep getting cut short. Maximum 4 MB. Assessment results always get at least 1 MB, whatever this is set to. |
+| `INFORCER_PAGE_SIZE` | `50` | Items per batch on the parts of Inforcer that work in pages - the activity log search, and user and group listings. Between 1 and 500. The activity log search takes at most 100, so anything above 100 means 100 there. |
+| `INFORCER_TOOLS` | `all` | `featured` shows a shorter tool list. In this release it hides one tool only, so it will not rescue an assistant that caps the list. |
 | `INFORCER_ALLOW_UNKNOWN_ROUTES` | off | Lets it read something Inforcer added after this version was released. |
 | `INFORCER_NO_UPDATE_CHECK` | off | Stops it checking for a newer version of itself at startup. |
 | `INFORCER_ALLOW_WRITES` | off | Nothing to switch on - Inforcer has no way to change a client's settings, so neither does this. |
 
 The three on/off settings accept `1` or `true`. Anything else leaves them off, silently - so check
-your spelling. A bad number, region or tenant list is different: the tool refuses to start and names
-the setting.
+your spelling. A bad number, region or tenant list is different, and so is a client ID without its
+secret or an `INFORCER_ACCOUNTS` that can't be read: the tool refuses to start and names the setting.
 
 There is deliberately **no setting for the Inforcer address**. If there were, a settings block pasted
-from somewhere untrustworthy could point this at someone else's server and send your key there.
+from somewhere untrustworthy could point this at someone else's server and send your key or client secret there.
 
 ### Two Inforcer accounts
 
-Each key covers one Inforcer account. One setup can hold two. Put them in a file of their own -
-`accounts.json`, anywhere you like:
+Each API client or key covers one Inforcer account. One setup can hold two. Put them in a file of
+their own - `accounts.json`, anywhere you like:
 
 ```json
 [
-  { "label": "contoso",  "key": "contoso-api-key",  "region": "uk", "tenants": [1001, 1002] },
-  { "label": "fabrikam", "key": "fabrikam-api-key", "region": "us" }
+  { "label": "contoso",  "clientId": "contoso-client-id", "clientSecret": "contoso-client-secret", "region": "uk",
+    "tenants": ["00000000-0000-0000-0000-000000001001"] },
+  { "label": "fabrikam", "key": "fabrikam-api-key", "region": "us", "tenants": [1001, 1002] }
 ]
 ```
 
-Then, instead of `INFORCER_API_KEY`:
+Then, instead of the client or key lines:
 
 ```json
 "env": { "INFORCER_ACCOUNTS": "~/.inforcer/accounts.json" }
 ```
 
-Only `label` and `key` are required. A separate file is safer than putting both keys in the settings
-block, which is the file most likely to get synced or pasted into a support ticket. Make it readable
-only by you: `chmod 600` on a Mac, or Properties → Security on Windows.
+Each entry needs a `label`, plus `clientId` and `clientSecret`, or `key`. An entry with all three uses
+the API client and ignores the key. `tenants` takes
+Microsoft tenant IDs for an API client and Inforcer's ID numbers for a key. A separate file is safer
+than putting secrets in the settings block, which is the file most likely to get synced or pasted
+into a support ticket. Make it readable only by you: `chmod 600` on a Mac, or Properties → Security on
+Windows.
 
 With two accounts your assistant asks **which one you mean** before answering, rather than guessing -
 an answer about the wrong client looks exactly like a right one. Name the client and it won't ask.
+
+### An API client and a key together
+
+If one account has both an API client and a key, only the API client is used. The key is ignored:
+nothing is sent with it, and the status check says so. Settings that already hold both keep working,
+so there is no rush - remove the key line when it suits you.
+
+Inforcer's newer API, the one an API client uses, knows clients by their Microsoft tenant ID, never by
+Inforcer's ID number. Name the client in your question, or give that ID.
 
 ## Keeping it up to date
 
