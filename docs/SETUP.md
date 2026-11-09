@@ -65,10 +65,19 @@ claude mcp add inforcer -s user \
   -- npx -y inforcercommunity-mcp@latest
 ```
 
+In PowerShell, which does not continue a line on `\`, the same as one line. Single quotes keep
+PowerShell from reading characters such as `$` in the secret:
+
+```powershell
+claude mcp add inforcer -s user -e INFORCER_CLIENT_ID=your-client-id -e INFORCER_CLIENT_SECRET='your-client-secret' -e INFORCER_REGION=uk -- npx -y inforcercommunity-mcp@latest
+```
+
 With an API key, use `-e INFORCER_API_KEY=your-api-key` in place of the two client lines.
 `-s user` makes it available in all your projects. On Windows, put `cmd /c` before `npx`.
 
-To remove it later: `claude mcp remove inforcer`.
+To remove it later: `claude mcp remove inforcer -s user`. Changing the client, the secret or the
+key is the same two steps: remove it, then add it again. Adding over an existing one is refused
+with "already exists". Restart Claude Code afterwards, because it starts this tool only once.
 
 ## VS Code
 
